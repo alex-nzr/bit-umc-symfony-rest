@@ -1,0 +1,9 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+#clinics:
+#  path: /clinics
+#  controller: App\Controller\ClinicsController::index
+controllers:
+  resource: ../src/Controller/
+  type: annotation
