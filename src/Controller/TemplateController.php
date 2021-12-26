@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\OneCReader;
+use App\Service\TemplateParamsGenerator;
 use App\Utils\Utils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,7 +16,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class TemplateController extends AbstractController{
 
-    public function __construct(){}
+    private TemplateParamsGenerator $paramsGenerator;
+
+    public function __construct(TemplateParamsGenerator $paramsGenerator)
+    {
+        $this->paramsGenerator = $paramsGenerator;
+    }
 
     /**
      * @Route("/", name="umc-api.root", methods={"GET"})
@@ -23,9 +29,6 @@ class TemplateController extends AbstractController{
     public function showApiRootPage(): Response
     {
         return $this->render('index.html.twig', [
-            // this array defines the variables passed to the template,
-            // where the key is the variable name and the value is the variable value
-            // (Twig recommends using snake_case variable names: 'foo_bar' instead of 'fooBar')
             //'user_first_name' => $userFirstName,
             //'notifications' => $userNotifications,
         ]);
@@ -36,6 +39,7 @@ class TemplateController extends AbstractController{
      */
     public function showApiExampleWidget(): Response
     {
-        return $this->render('widget/index.html.twig');
+        $widgetParams = $this->paramsGenerator->generateWidgetParams();
+        return $this->render('widget/index.html.twig', $widgetParams);
     }
 }
