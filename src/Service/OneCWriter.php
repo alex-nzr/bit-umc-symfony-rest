@@ -10,7 +10,7 @@ class OneCWriter extends BaseOneCService
      * @param bool $unauthorized
      * @return string
      */
-    public function addOrder(array $params, bool $unauthorized = false): string
+    public function addOrder(array $params): string
     {
         if (Utils::validateOrderParams($params))
         {
@@ -18,7 +18,7 @@ class OneCWriter extends BaseOneCService
             $params['timeBegin'] = Utils::formatDateToOrder($params['timeBegin'], true);
             $params['timeEnd']   = Utils::formatDateToOrder($params['timeEnd'], true);
 
-            if ($unauthorized)
+            if (empty($params["clientUid"]))
             {
                 $params["comment"] =    $params['name'] . " "
                     . $params['middleName'] . " "
