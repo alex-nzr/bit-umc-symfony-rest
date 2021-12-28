@@ -286,10 +286,11 @@ body{
         user-select: none;
     }
     & .empty-selection-message{
-        display:block;
-        padding: 0 15px;
-        font-size:11px;
+        display: block;
+        padding: 0 15px 5px;
+        font-size: 12px;
         pointer-events: none;
+        color: #fff;
     }
 
     & .appointment-form_textarea{

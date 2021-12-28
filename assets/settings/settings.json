@@ -6,7 +6,6 @@
   "showDoctorsWithoutDepartment": "Y",
   "timeStepDurationMinutes": 15,
   "privacyPageLink": "javascript: void(0)",
-  "useCalendar": "Y",
 
   "widgetBtnWrapId":  "appointment-button-wrapper",
   "wrapperId":        "appointment-widget-wrapper",

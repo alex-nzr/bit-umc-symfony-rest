@@ -11,7 +11,6 @@ window.appointmentWidget = {
         this.timeStepDurationMinutes		= Number(params.timeStepDurationMinutes);
         this.strictCheckingOfRelations		= (params.strictCheckingOfRelations === "Y");
         this.showDoctorsWithoutDepartment	= (params.showDoctorsWithoutDepartment === "Y");
-        this.useCalendar                    = (params.useCalendar === "Y");
 
         this.isUpdate = params.isUpdate;
         this.requestParams = {
@@ -489,7 +488,7 @@ window.appointmentWidget = {
         if (this.data.schedule.length)
         {
             const scheduleList = this.selectionNodes[this.dataKeys.scheduleKey].listNode;
-            this.useCalendar ? scheduleList.classList.add("column-mode") : void(0);
+            scheduleList.classList.add("column-mode");
             scheduleList.innerHTML = '';
             this.eventHandlersAdded[this.dataKeys.scheduleKey] = false;
 
@@ -538,25 +537,19 @@ window.appointmentWidget = {
                         let renderColumn = false;
                         intervals.forEach((day, index) => {
                             const isLast = (index === (intervals.length - 1));
-                            if (this.useCalendar)
+                            if ((day.date !== renderDate) || isLast)
                             {
-                                if ((day.date !== renderDate) || isLast)
-                                {
-                                    renderColumn ? scheduleList.append(renderColumn) : void(0);
-                                    !isLast || (intervals.length === 1) ? renderColumn = this.createDayColumn(day) : void(0);
-                                    renderDate = day.date;
-                                }
-                                const time = document.createElement('span');
-                                time.dataset.displayDate = `${day['formattedDate']} `;
-                                time.dataset.date = day.date;
-                                time.dataset.start = day.timeBegin;
-                                time.dataset.end = day.timeEnd;
-                                time.textContent = `${day['formattedTimeBegin']}`;
-                                renderColumn.append(time);
+                                renderColumn ? scheduleList.append(renderColumn) : void(0);
+                                !isLast || (intervals.length === 1) ? renderColumn = this.createDayColumn(day) : void(0);
+                                renderDate = day.date;
                             }
-                            else{
-                                scheduleList.append(this.createDayRow(day));
-                            }
+                            const time = document.createElement('span');
+                            time.dataset.displayDate = `${day['formattedDate']} `;
+                            time.dataset.date = day.date;
+                            time.dataset.start = day.timeBegin;
+                            time.dataset.end = day.timeEnd;
+                            time.textContent = `${day['formattedTimeBegin']}`;
+                            renderColumn.append(time);
                         });
                     }else{
                         const span = document.createElement('span');
@@ -639,18 +632,6 @@ window.appointmentWidget = {
         return column;
     },
 
-    createDayRow: function(day){
-        const li = document.createElement('li');
-        const span = document.createElement('span');
-        li.dataset.date = day.date;
-        li.dataset.start = day.timeBegin;
-        li.dataset.end = day.timeEnd;
-        li.textContent = `${day['formattedDate']} `;
-        span.textContent = `${day['formattedTimeBegin']}-${day['formattedTimeEnd']}`;
-        li.append(span);
-        return li;
-    },
-
     addHorizontalScrollButtons: function(){
         const scroller = this.selectionNodes[this.dataKeys.scheduleKey].listNode;
 
@@ -708,7 +689,7 @@ window.appointmentWidget = {
                 selected.classList.add('activated');
             }
             this.eventHandlersAdded[dataKey] = true;
-            ((dataKey === this.dataKeys.scheduleKey) && this.useCalendar) ? this.addHorizontalScrollButtons() : void(0);
+            (dataKey === this.dataKeys.scheduleKey) ? this.addHorizontalScrollButtons() : void(0);
             this.addItemActions(dataKey);
         }
         else{
@@ -722,7 +703,7 @@ window.appointmentWidget = {
             return;
         }
         for (let item of items) {
-            if (this.useCalendar && dataKey === this.dataKeys.scheduleKey)
+            if (dataKey === this.dataKeys.scheduleKey)
             {
                 const times = item.querySelectorAll('span');
                 times.length && times.forEach((time) => {
