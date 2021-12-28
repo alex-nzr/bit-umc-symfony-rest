@@ -10,9 +10,20 @@ Encore
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
-    .setPublicPath('/build')
+    .setPublicPath('/umc-api/build')
     // only needed for CDN's or sub-directory deploy
-    //.setManifestKeyPrefix('build/')
+    .setManifestKeyPrefix('umc-api/build/')
+
+    //copy static files if need
+    .copyFiles({
+         from: './assets/settings/',
+        // optional target path, relative to the output dir
+        to: 'settings/[path][name].[ext]',
+        // if versioning is enabled, add the file hash too
+        //to: 'images/[path][name].[hash:8].[ext]',
+        // only copy files matching this pattern
+        // pattern: /\.(png|jpg|jpeg)$/
+    })
 
     /*
      * ENTRY CONFIG
@@ -56,10 +67,13 @@ Encore
     })
 
     // enables Sass/SCSS support
-    //.enableSassLoader()
+    .enableSassLoader()
+
+    //postCss
+    .enablePostCssLoader()
 
     // uncomment if you use TypeScript
-    //.enableTypeScriptLoader()
+    .enableTypeScriptLoader()
 
     // uncomment if you use React
     //.enableReactPreset()

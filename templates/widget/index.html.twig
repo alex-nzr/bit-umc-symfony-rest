@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Образец виджета</title>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+
+<script>
+    const selectionNodes = {};
+    const textNodes      = {};
+    const defaultText    = {};
+</script>
+
+<div class="appointment-button-wrapper loading" id="{{ widgetBtnWrapId }}">
+    <button id="{{ widgetBtnId }}"></button>
+    <div class="appointment-loader">
+        {%  for i in range(1, 5) %}
+            <div class="wBall" id="wBall_{{ i }}"><div class="wInnerBall"></div></div>
+        {% endfor %}
+    </div>
+</div>
+<div class="widget-wrapper" id="{{ wrapperId }}">
+    <form id="{{ formId }}" class="appointment-form">
+        {% for key, block in selectionBlocks %}
+        <div class="selection-block {{ (key != "clinicsBlock") ? 'hidden' : '' }}" id="{{ block.id }}_block">
+            <p class="selection-item-selected" id="{{ block.id }}_selected">{{ block.name }}</p>
+            <ul class="appointment-form_head_list selection-item-list" id="{{ block.id }}_list"></ul>
+            <input type="hidden" name="{{ block.id }}" id="{{ block.id }}_value">
+        </div>
+        <script>
+            selectionNodes['{{ block.id }}'] = {
+                "blockId": "{{ block.id }}_block",
+                "listId": "{{ block.id }}_list",
+                "selectedId": "{{ block.id }}_selected",
+                "inputId": "{{ block.id }}_value",
+                "isRequired": {{ (key != "servicesBlock") ? 'false' : 'true' }}
+                }
+                defaultText['{{ block.id }}'] = '{{ block.name }}';
+        </script>
+        {% endfor %}
+
+        {% for blockAttrs in textBlocks %}
+        <label class="appointment-form_input-wrapper">
+            {% if blockAttrs.type is defined %}
+            <input
+                {% for attrName, attrValue in blockAttrs %}
+                    {{ attrName }}="{{ attrValue }}"
+                {% endfor %}
+            />
+            {% else %}
+                <textarea   {% for attrName, attrValue in blockAttrs %}
+                                {{ attrName }}="{{ attrValue }}"
+                            {% endfor %}></textarea>
+            {% endif %}
+        </label>
+        <script>
+            textNodes["{{ blockAttrs.name }}"] = {
+                "inputId": "{{ blockAttrs.id }}",
+                "isRequired": {{ (blockAttrs.name == "comment") ? 'false' : 'true' }}
+                };
+            </script>
+        {% endfor %}
+
+        <p id="{{ messageNodeId }}"></p>
+
+        <div class="appointment-form_submit-wrapper">
+            <button type="submit" id="{{ submitBtnId }}" class="appointment-form_button">Записаться на приём</button>
+        </div>
+
+        <p class="appointment-info-message">
+            Отправляя данные, вы соглашаетесь с <a href="{{ privacyPageLink }}">политикой конфиденциальности</a> сайта
+        </p>
+
+        <div id="{{ appResultBlockId }}"><p></p></div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', ()=>{
+        window.appointmentWidget.init({
+            "useServices": '{{ useServices }}',
+            "selectDoctorBeforeService": '{{ selectDoctorBeforeService }}',
+            "useTimeSteps": '{{ useTimeSteps }}',
+            "strictCheckingOfRelations": '{{ strictCheckingOfRelations }}',
+            "showDoctorsWithoutDepartment": '{{ showDoctorsWithoutDepartment }}',
+            "timeStepDurationMinutes": '{{ timeStepDurationMinutes }}',
+            "useCalendar": '{{ useCalendar }}',
+            "widgetBtnWrapId": '{{ widgetBtnWrapId }}',
+            "wrapperId": "{{ wrapperId }}",
+            "formId": '{{ formId }}',
+            "widgetBtnId": '{{ widgetBtnId }}',
+            "messageNodeId": '{{ messageNodeId }}',
+            "submitBtnId": '{{ submitBtnId }}',
+            "appResultBlockId": '{{ appResultBlockId }}',
+            "dataKeys": {
+                "clinicsKey": '{{ selectionBlocks.clinicsBlock.id }}',
+                "specialtiesKey": '{{ selectionBlocks.specialtiesBlock.id }}',
+                "servicesKey": '{{ selectionBlocks.servicesBlock.id }}',
+                "employeesKey": '{{ selectionBlocks.employeesBlock.id }}',
+                "scheduleKey": '{{ selectionBlocks.scheduleBlock.id }}',
+            },
+            "selectionNodes": selectionNodes,
+            "textNodes": textNodes,
+            "defaultText": defaultText,
+            "isUpdate": false,
+        });
+    })
+</script>
+
+</body>
+</html>

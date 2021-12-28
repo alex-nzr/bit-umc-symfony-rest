@@ -22,7 +22,7 @@ class OneCController extends AbstractController
     }
 
     /**
-     * @Route("/clinics/list", name="clinics.list", methods={"POST", "GET"})
+     * @Route("/clinics/list", name="clinics.list", methods={"POST"})
      */
     public function getClinicsList(): JsonResponse
     {
@@ -31,7 +31,7 @@ class OneCController extends AbstractController
     }
 
     /**
-     * @Route("/employees/list", name="employees.list", methods={"POST", "GET"})
+     * @Route("/employees/list", name="employees.list", methods={"POST"})
      */
     public function getEmployeesList(Request $request): JsonResponse
     {
@@ -40,7 +40,7 @@ class OneCController extends AbstractController
     }
 
     /**
-     * @Route("/nomenclature/list", name="nomenclature.list", methods={"POST", "GET"})
+     * @Route("/nomenclature/list", name="nomenclature.list", methods={"POST"})
      */
     public function getNomenclatureList(Request $request): JsonResponse
     {
@@ -49,7 +49,7 @@ class OneCController extends AbstractController
     }
 
     /**
-     * @Route("/schedule", name="schedule.get", methods={"POST", "GET"})
+     * @Route("/schedule", name="schedule.get", methods={"POST"})
      */
     public function getSchedule(): JsonResponse
     {
@@ -58,7 +58,7 @@ class OneCController extends AbstractController
     }
 
     /**
-     * @Route("/clients/list", name="clients.list", methods={"POST", "GET"})
+     * @Route("/clients/list", name="clients.list", methods={"POST"})
      */
     public function getClientsList(Request $request): JsonResponse
     {

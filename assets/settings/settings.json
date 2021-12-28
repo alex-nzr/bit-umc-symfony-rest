@@ -1,0 +1,84 @@
+{
+  "useServices": "Y",
+  "selectDoctorBeforeService": "Y",
+  "useTimeSteps": "N",
+  "strictCheckingOfRelations": "Y",
+  "showDoctorsWithoutDepartment": "Y",
+  "timeStepDurationMinutes": 15,
+  "privacyPageLink": "javascript: void(0)",
+  "useCalendar": "Y",
+
+  "widgetBtnWrapId":  "appointment-button-wrapper",
+  "wrapperId":        "appointment-widget-wrapper",
+  "formId":           "appointment-form",
+  "widgetBtnId":      "appointment-button",
+  "messageNodeId":    "appointment-form-message",
+  "submitBtnId":      "appointment-form-button",
+  "appResultBlockId": "appointment-result-block",
+
+  "selectionBlocks": {
+    "clinicsBlock":     {
+      "id" : "FILIAL",
+      "name": "Выберите клинику"
+    },
+    "specialtiesBlock": {
+      "id" : "SPECIALTY",
+      "name": "Выберите направление"
+    },
+    "servicesBlock":    {
+      "id" : "SERVICE",
+      "name": "Выберите услугу"
+    },
+    "employeesBlock":   {
+      "id" : "DOCTOR",
+      "name": "Выберите врача"
+    },
+    "scheduleBlock":    {
+      "id" : "DATE_TIME",
+      "name": "Выберите время"
+    }
+  },
+  "textBlocks": [
+    {
+      "type": "text",
+      "placeholder": "Имя *",
+      "id": "appointment-form-name",
+      "maxlength": "30",
+      "class": "appointment-form_input",
+      "name": "name"
+    },
+    {
+      "type": "text",
+      "placeholder": "Отчество *",
+      "id": "appointment-form-middleName",
+      "maxlength": "30",
+      "class": "appointment-form_input",
+      "name": "middleName"
+    },
+    {
+      "type": "text",
+      "placeholder": "Фамилия *",
+      "id": "appointment-form-surname",
+      "maxlength": "30",
+      "class": "appointment-form_input",
+      "name": "surname"
+    },
+    {
+      "type": "tel",
+      "placeholder": "Телефон *",
+      "id": "appointment-form-phone",
+      "maxlength": "30",
+      "class": "appointment-form_input",
+      "name": "phone",
+      "autocomplete": "new-password",
+      "aria-autocomplete": "list"
+    },
+    {
+      "placeholder": "Комментарий",
+      "id": "appointment-form-comment",
+      "maxlength": "300",
+      "class": "appointment-form_textarea",
+      "name": "comment"
+    }
+  ]
+}
