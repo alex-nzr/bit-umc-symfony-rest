@@ -213,7 +213,7 @@ window.appointmentWidget = {
 
     getListClinic: async function(){
         try {
-            const response = await fetch("/umc-api/clinics/list", this.requestParams);
+            const response = await fetch("/umc-api/clinic/list", this.requestParams);
             if (response.ok) {
                 return response;
             }else{
@@ -226,7 +226,7 @@ window.appointmentWidget = {
 
     getListEmployees: async function(){
         try {
-            const response = await fetch("/umc-api/employees/list", this.requestParams);
+            const response = await fetch("/umc-api/employee/list", this.requestParams);
             if (response.ok) {
                 return response;
             }else{
@@ -252,7 +252,7 @@ window.appointmentWidget = {
 
     getSchedule: async function(){
         try {
-            const response = await fetch("/umc-api/schedule", this.requestParams);
+            const response = await fetch("/umc-api/schedule/get", this.requestParams);
             if (response.ok) {
                 return response;
             }else{

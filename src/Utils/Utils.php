@@ -224,4 +224,13 @@ class Utils{
             return [];
         }
     }
+
+    /** checking the validity of the json
+     * @param $string
+     * @return bool
+     */
+    public static function isJSON($string): bool
+    {
+        return is_string($string) && (is_object(json_decode($string)) || is_array(json_decode($string, true)));
+    }
 }

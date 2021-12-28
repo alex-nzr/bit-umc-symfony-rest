@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\OneCReader;
+use App\Service\OneCWriter;
 use App\Utils\Utils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,14 +16,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class OneCController extends AbstractController
 {
     private OneCReader $reader;
+    private OneCWriter $writer;
 
-    public function __construct(OneCReader $reader)
+    public function __construct(OneCReader $reader, OneCWriter $writer)
     {
         $this->reader = $reader;
+        $this->writer = $writer;
     }
 
     /**
-     * @Route("/clinics/list", name="clinics.list", methods={"POST"})
+     * @Route("/clinic/list", name="clinic.list", methods={"POST"})
      */
     public function getClinicsList(): JsonResponse
     {
@@ -31,7 +34,7 @@ class OneCController extends AbstractController
     }
 
     /**
-     * @Route("/employees/list", name="employees.list", methods={"POST"})
+     * @Route("/employee/list", name="employee.list", methods={"POST"})
      */
     public function getEmployeesList(Request $request): JsonResponse
     {
@@ -49,7 +52,7 @@ class OneCController extends AbstractController
     }
 
     /**
-     * @Route("/schedule", name="schedule.get", methods={"POST"})
+     * @Route("/schedule/get", name="schedule.get", methods={"POST"})
      */
     public function getSchedule(): JsonResponse
     {
@@ -58,11 +61,47 @@ class OneCController extends AbstractController
     }
 
     /**
-     * @Route("/clients/list", name="clients.list", methods={"POST"})
+     * @Route("/order/list", name="order.list", methods={"POST"})
+     */
+    public function getOrdersList(Request $request): JsonResponse
+    {
+        $response = $this->reader->getOrdersList(Utils::getRequestParams($request));
+        return JsonResponse::fromJsonString($response);
+    }
+
+    /**
+     * @Route("/order/add", name="order.add", methods={"POST"})
+     */
+    public function addOrder(Request $request): JsonResponse
+    {
+        $response = $this->writer->addOrder(Utils::getRequestParams($request));
+        return JsonResponse::fromJsonString($response);
+    }
+
+    /**
+     * @Route("/order/delete", name="order.delete", methods={"POST"})
+     */
+    public function deleteOrder(Request $request): JsonResponse
+    {
+        $response = $this->writer->deleteOrder(Utils::getRequestParams($request));
+        return JsonResponse::fromJsonString($response);
+    }
+
+    /**
+     * @Route("/client/list", name="client.list", methods={"POST"})
      */
     public function getClientsList(Request $request): JsonResponse
     {
         $response = $this->reader->getClientsList(Utils::getRequestParams($request));
+        return JsonResponse::fromJsonString($response);
+    }
+
+    /**
+     * @Route("/client/update", name="client.update", methods={"POST"})
+     */
+    public function updateClient(Request $request): JsonResponse
+    {
+        $response = $this->writer->updateClient(Utils::getRequestParams($request));
         return JsonResponse::fromJsonString($response);
     }
 }

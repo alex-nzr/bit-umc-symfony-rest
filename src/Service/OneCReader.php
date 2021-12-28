@@ -3,32 +3,9 @@ namespace App\Service;
 
 use App\Config\Variables;
 use App\Utils\Utils;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class OneCReader
+class OneCReader extends BaseOneCService
 {
-    private HttpClientInterface $client;
-    private string $endpoint;
-    private string $authToken;
-
-    public function __construct(HttpClientInterface $client)
-    {
-        $this->client = $client;
-
-        $this->endpoint = "";
-        foreach (Variables::ONE_C_CONNECT_DATA as $param => $value)
-        {
-            $separator = $param === "PROTOCOL" ? Variables::COLON . Variables::D_SEP : Variables::SEP;
-            $this->endpoint .= $value . $separator;
-        }
-
-        $this->authToken = base64_encode(Variables::AUTH_LOGIN_1C.Variables::COLON.Variables::AUTH_PASSWORD_1C);
-    }
-
     /** get list of clinics in json
      * @return string
      */
@@ -183,28 +160,39 @@ class OneCReader
         return json_encode($data);
     }
 
-    /** send request to 1C database
+    /** get list of orders in json
      * @param array $params
      * @return string
      */
-    public function post(array $params = []): string
+    public function getOrdersList(array $params): string
     {
-        try {
-            $response = $this->client->request('POST', $this->endpoint, [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Authorization' => 'Basic ' . $this->authToken,
-                    'Content-Type' => 'application/json;charset=utf-8',
-                ],
-                'body' => json_encode($params),
-            ]);
+        if (!empty($params["clientUid"])){
+            $this->endpoint .= "GetListOrders";
+            $data = json_decode($this->post($params), true);
+            $orders = $data["orders"];
+            if (empty($data["error"]) && is_array($orders))
+            {
+                foreach ($orders as $key => $order)
+                {
+                    if (!empty($order["orderDate"])){
+                        $orders[$key]["displayOrderDate"] = date("d-m-Y", strtotime($order["orderDate"]));
+                    }
+                    if (!empty($order["timeBegin"])){
+                        $orders[$key]["displayTimeBegin"] = date("H:i", strtotime($order["timeBegin"]));
+                    }
+                    if (!empty($order["timeEnd"])){
+                        $orders[$key]["displayTimeEnd"] = date("H:i", strtotime($order["timeEnd"]));
+                    }
+                    if (!empty($order["clientBirthday"])){
+                        $orders[$key]["displayClientBirthday"] = date("d-m-Y", strtotime($order["clientBirthday"]));
+                    }
 
-            return $response->getContent();
+                    $data = $orders;
+                }
+            }
+
+            return json_encode($data);
         }
-        catch (\Exception | TransportExceptionInterface | ClientExceptionInterface
-                | RedirectionExceptionInterface | ServerExceptionInterface $e )
-        {
-            return Utils::addError($e->getMessage());
-        }
+        return Utils::addError('ClientUid is empty');
     }
 }
