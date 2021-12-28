@@ -43,7 +43,7 @@
                 "listId": "{{ block.id }}_list",
                 "selectedId": "{{ block.id }}_selected",
                 "inputId": "{{ block.id }}_value",
-                "isRequired": {{ (key != "servicesBlock") ? 'false' : 'true' }}
+                "isRequired": {{ (key == "servicesBlock" and useServices != "Y") ? 'false' : 'true' }}
                 }
                 defaultText['{{ block.id }}'] = '{{ block.name }}';
         </script>
@@ -66,9 +66,9 @@
         <script>
             textNodes["{{ blockAttrs.name }}"] = {
                 "inputId": "{{ blockAttrs.id }}",
-                "isRequired": {{ (blockAttrs.name == "comment") ? 'false' : 'true' }}
-                };
-            </script>
+                "isRequired": {{ blockAttrs["data-required"] }}
+            };
+        </script>
         {% endfor %}
 
         <p id="{{ messageNodeId }}"></p>

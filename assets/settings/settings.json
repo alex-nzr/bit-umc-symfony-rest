@@ -44,7 +44,8 @@
       "id": "appointment-form-name",
       "maxlength": "30",
       "class": "appointment-form_input",
-      "name": "name"
+      "name": "name",
+      "data-required": "true"
     },
     {
       "type": "text",
@@ -52,7 +53,8 @@
       "id": "appointment-form-middleName",
       "maxlength": "30",
       "class": "appointment-form_input",
-      "name": "middleName"
+      "name": "middleName",
+      "data-required":  "true"
     },
     {
       "type": "text",
@@ -60,7 +62,8 @@
       "id": "appointment-form-surname",
       "maxlength": "30",
       "class": "appointment-form_input",
-      "name": "surname"
+      "name": "surname",
+      "data-required":  "true"
     },
     {
       "type": "tel",
@@ -69,6 +72,7 @@
       "maxlength": "30",
       "class": "appointment-form_input",
       "name": "phone",
+      "data-required":  "true",
       "autocomplete": "new-password",
       "aria-autocomplete": "list"
     },
@@ -77,7 +81,8 @@
       "id": "appointment-form-comment",
       "maxlength": "300",
       "class": "appointment-form_textarea",
-      "name": "comment"
+      "name": "comment",
+      "data-required": "false"
     }
   ]
 }

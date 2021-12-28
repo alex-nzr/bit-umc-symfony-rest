@@ -734,6 +734,7 @@ window.appointmentWidget = {
     },
 
     changeStep: function(dataKey, target){
+        this.selectionNodes[dataKey].inputNode.value = target.dataset.uid;
         switch (dataKey) {
             case this.dataKeys.clinicsKey:
                 this.filledInputs[dataKey].clinicUid = target.dataset.uid;
@@ -776,6 +777,7 @@ window.appointmentWidget = {
                 this.filledInputs[dataKey].orderDate = target.dataset.date;
                 this.filledInputs[dataKey].timeBegin = target.dataset.start;
                 this.filledInputs[dataKey].timeEnd = target.dataset.end;
+                this.selectionNodes[dataKey].inputNode.value = target.dataset.date;
                 break;
             default:
                 this.errorMessage('stepCode is invalid or empty')
@@ -789,6 +791,7 @@ window.appointmentWidget = {
 
         if (this.checkRequiredFields())
         {
+            this.messageNode ? this.messageNode.textContent = "" : void(0);
             this.form.style.pointerEvents = 'none';
             this.submitBtn.classList.add('loading');
             let orderData = { 'action': 'CreateOrderUnauthorized',  ...this.filledInputs.textValues};
@@ -801,7 +804,6 @@ window.appointmentWidget = {
                 }
             }
             await this.sendOrder(orderData);
-            this.messageNode ? this.messageNode.textContent = "" : void(0);
         }
         else
         {
@@ -848,21 +850,31 @@ window.appointmentWidget = {
         }
     },
 
+    sendToEmail: async function (params) {
+        this.requestParams.body = JSON.stringify(params);
+        await fetch("/umc-api/mail/send", this.requestParams);
+    },
+
     checkRequiredFields: function(){
-        return !(
-            !this.filledInputs[this.dataKeys.clinicsKey].clinicUid ||
-            !this.filledInputs[this.dataKeys.clinicsKey].clinicName ||
-            !this.filledInputs[this.dataKeys.specialtiesKey].specialty ||
-            !this.filledInputs[this.dataKeys.employeesKey].refUid ||
-            !this.filledInputs[this.dataKeys.employeesKey].doctorName ||
-            !this.filledInputs[this.dataKeys.scheduleKey].orderDate ||
-            !this.filledInputs[this.dataKeys.scheduleKey].timeBegin ||
-            !this.filledInputs[this.dataKeys.scheduleKey].timeEnd ||
-            !this.filledInputs.textValues.name ||
-            !this.filledInputs.textValues.surname ||
-            !this.filledInputs.textValues.middleName ||
-            !this.phoneIsValid(this.textNodes.phone.inputNode)
-        );
+        let allNotEmpty = true;
+
+        if (this.requiredInputs.length > 0){
+            this.requiredInputs.some(input => {
+                if (!this.isNotEmptyVal(input)){
+                    allNotEmpty = false;
+                    return true;
+                }
+            });
+        }
+
+		return allNotEmpty && this.phoneIsValid(this.textNodes.phone.inputNode);
+
+    },
+
+    isNotEmptyVal: function(input){
+        let  isNotEmpty = (typeof input.value === "string" && input.value.length > 0);
+        !isNotEmpty ? input.parentElement.classList.add("error") : input.parentElement.classList.remove("error");
+        return isNotEmpty;
     },
 
     activateBlocks: function(){
@@ -898,6 +910,7 @@ window.appointmentWidget = {
 
     resetValue: function(nodesKey) {
         this.selectionNodes[nodesKey].selectedNode.textContent = this.defaultText[nodesKey];
+        this.selectionNodes[nodesKey].inputNode.value = "";
         if (this.filledInputs.hasOwnProperty(nodesKey)){
             for (const propKey in this.filledInputs[nodesKey]) {
                 if (this.filledInputs[nodesKey].hasOwnProperty(propKey)){
@@ -1027,15 +1040,21 @@ window.appointmentWidget = {
 
     phoneIsValid: function(phoneInput){
         const phone = phoneInput.value;
-        if (!phone){
-            return false;
+        let isValid = true;
+        if (!phone)
+        {
+            isValid = false;
         }
-        const validCodes = [904,900,901,902,903,905,906,908,909,910,911,912,913,914,915,916,917,918,
-            919,920,921,922,923,924,925,926,927,928,929,930,931,932,933,934,936,937,938,939,950,951,
-            952,953,958,960,961,962,963,964,965,966,967,968,969,978,980,981,982,983,984,985,986,987,
-            988,989,992,994,995,996,997,999];
-        const code = Number(phone[3] + phone[4] + phone[5]);
-        const isValid = validCodes.includes(code) && phone.length === 16;
+        else
+        {
+            const validCodes = [904,900,901,902,903,905,906,908,909,910,911,912,913,914,915,916,917,918,
+                919,920,921,922,923,924,925,926,927,928,929,930,931,932,933,934,936,937,938,939,950,951,
+                952,953,958,960,961,962,963,964,965,966,967,968,969,978,980,981,982,983,984,985,986,987,
+                988,989,992,994,995,996,997,999];
+            const code = Number(`${phone[3]}${phone[4]}${phone[5]}`);
+            isValid = validCodes.includes(code) && phone.length === 16;
+        }
+
         !isValid ? phoneInput.parentElement.classList.add("error") : phoneInput.parentElement.classList.remove("error");
         return isValid;
     },
