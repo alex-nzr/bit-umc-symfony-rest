@@ -634,32 +634,35 @@ window.appointmentWidget = {
 
     addHorizontalScrollButtons: function(){
         const scroller = this.selectionNodes[this.dataKeys.scheduleKey].listNode;
+        const item = scroller.querySelector('li');
 
-        const btnBlock = document.createElement("div");
-        btnBlock.classList.add("horizontal-scroll-buttons")
-        const nextBtn = document.createElement("button");
-        const prevBtn = document.createElement("button");
-        nextBtn.type = "button";
-        prevBtn.type = "button";
-        nextBtn.textContent = ">";
-        prevBtn.textContent = "<";
-        btnBlock.append(prevBtn);btnBlock.append(nextBtn);
-        scroller.append(btnBlock);
+        if (item){
+            const itemWidth = scroller.querySelector('li').clientWidth;
 
-        const itemWidth = scroller.querySelector('li').clientWidth;
+            const btnBlock = document.createElement("div");
+            btnBlock.classList.add("horizontal-scroll-buttons")
+            const nextBtn = document.createElement("button");
+            const prevBtn = document.createElement("button");
+            nextBtn.type = "button";
+            prevBtn.type = "button";
+            nextBtn.textContent = ">";
+            prevBtn.textContent = "<";
+            btnBlock.append(prevBtn);btnBlock.append(nextBtn);
+            scroller.append(btnBlock);
 
-        nextBtn.onclick = () => {
-            if (scroller.scrollLeft < (scroller.scrollWidth - itemWidth*3 - 10)) {
-                scroller.scrollBy({ left: itemWidth*3, top: 0, behavior: 'smooth' });
-            } else {
-                scroller.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+            nextBtn.onclick = () => {
+                if (scroller.scrollLeft < (scroller.scrollWidth - itemWidth*3 - 10)) {
+                    scroller.scrollBy({ left: itemWidth*3, top: 0, behavior: 'smooth' });
+                } else {
+                    scroller.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+                }
             }
-        }
-        prevBtn.onclick = () => {
-            if (scroller.scrollLeft !== 0) {
-                scroller.scrollBy({ left: -itemWidth*3, top: 0, behavior: 'smooth' });
-            } else {
-                scroller.scrollTo({ left: scroller.scrollWidth, top: 0, behavior: 'smooth' });
+            prevBtn.onclick = () => {
+                if (scroller.scrollLeft !== 0) {
+                    scroller.scrollBy({ left: -itemWidth*3, top: 0, behavior: 'smooth' });
+                } else {
+                    scroller.scrollTo({ left: scroller.scrollWidth, top: 0, behavior: 'smooth' });
+                }
             }
         }
     },
