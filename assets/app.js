@@ -68,7 +68,8 @@ window.appointmentWidget = {
                 middleName: !this.isReloading ? false: this.filledInputs.textValues.middleName,
                 phone: 		!this.isReloading ? false: this.filledInputs.textValues.phone,
                 address: 	!this.isReloading ? false: this.filledInputs.textValues.address,
-                comment: 	false,
+                email: 	    !this.isReloading ? false: this.filledInputs.textValues.email,
+                comment: 	!this.isReloading ? false: this.filledInputs.textValues.comment,
             },
         }
         this.defaultText = params.defaultText;
@@ -834,6 +835,7 @@ window.appointmentWidget = {
                 }
                 else if(result.success)
                 {
+                    params["email"] ? await this.sendToEmail(params) : void(0);
                     this.finalizingWidget(true);
                 }
                 else
@@ -852,7 +854,7 @@ window.appointmentWidget = {
 
     sendToEmail: async function (params) {
         this.requestParams.body = JSON.stringify(params);
-        await fetch("/umc-api/mail/send", this.requestParams);
+        await fetch("/umc-api/email/send", this.requestParams);
     },
 
     checkRequiredFields: function(){
@@ -1040,7 +1042,7 @@ window.appointmentWidget = {
 
     phoneIsValid: function(phoneInput){
         const phone = phoneInput.value;
-        let isValid = true;
+        let isValid;
         if (!phone)
         {
             isValid = false;
@@ -1100,6 +1102,8 @@ window.appointmentWidget = {
         this.wrapper.classList.remove('active');
         this.resultBlock.classList.remove('active');
         this.widgetBtn.classList.remove('success');
+        this.widgetBtn.classList.remove('active');
+        this.selectionNodes[this.dataKeys.scheduleKey].listNode.scrollTo({ left: 0, top: 0});
         this.form.style.pointerEvents = '';
         this.form.classList.remove('off');
         this.isReloading = true;

@@ -435,6 +435,15 @@ body{
 
 /*********************************************************************************/
 
+.appointment-button-wrapper{
+    &.hidden{
+        max-height: 0;
+        margin-bottom: 0;
+        transform-origin: center top;
+        transform: scaleY(0);
+    }
+}
+
 .appointment-button-wrapper .appointment-loader {
     display: none;
 }

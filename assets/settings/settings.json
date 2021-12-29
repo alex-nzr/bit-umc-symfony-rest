@@ -77,6 +77,15 @@
       "aria-autocomplete": "list"
     },
     {
+      "type": "email",
+      "placeholder": "Email *",
+      "id": "appointment-form-email",
+      "maxlength": "50",
+      "class": "appointment-form_input",
+      "name": "email",
+      "data-required":  "false"
+    },
+    {
       "placeholder": "Комментарий",
       "id": "appointment-form-comment",
       "maxlength": "300",
