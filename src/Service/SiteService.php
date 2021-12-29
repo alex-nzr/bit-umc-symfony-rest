@@ -2,5 +2,26 @@
 namespace App\Service;
 
 class SiteService{
-    //"user.add", //or "user.update", or "user.recoverPassword"
+
+    public function __construct()
+    {
+    }
+
+    public function addUser():string
+    {
+        //some processing here
+        return json_encode(['success' => true]);
+    }
+
+    public function updateUser():string
+    {
+        //some processing here
+        return json_encode(['success' => true]);
+    }
+
+    public function recoverUserPassword():string
+    {
+        //some processing here
+        return json_encode(['success' => true]);
+    }
 }
