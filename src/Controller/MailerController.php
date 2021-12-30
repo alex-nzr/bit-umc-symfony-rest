@@ -19,7 +19,7 @@ class MailerController extends AbstractController
     public function __construct(){}
 
     /**
-     * @Route("/email/send"), name="email.send", methods={"POST","GET"})
+     * @Route("/email/send"), name="email.send", methods={"POST"})
      */
     public function sendEmail(MailerService $mailer, Request $request): Response
     {
