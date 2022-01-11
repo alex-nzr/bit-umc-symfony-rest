@@ -2,10 +2,14 @@
 namespace App\Controller;
 
 use App\Service\SiteService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-class SiteController{
+/**
+ * @Route("/umc-api")
+ */
+class SiteController extends AbstractController{
     private SiteService $siteService;
 
     public function __construct(SiteService $siteService)
