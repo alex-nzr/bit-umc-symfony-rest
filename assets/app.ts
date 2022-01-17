@@ -1,6 +1,12 @@
 import './styles/app.scss';
 //import './bootstrap';
 
+declare global {
+    interface Window {
+        appointmentWidget: object;
+    }
+}
+
 window.appointmentWidget = {
     init: async function(params){
         this.initParams = params;
@@ -264,29 +270,35 @@ window.appointmentWidget = {
     },
 
     startRender: function(){
-        const clinicsRendered = this.renderClinicList();
-        if (clinicsRendered)
+        try
         {
-            if (this.isUpdate === "Y")
+            const clinicsRendered = this.renderClinicList();
+            if (clinicsRendered)
             {
-                for (const dataKey in this.filledInputs) {
-                    if (this.filledInputs.hasOwnProperty(dataKey)
-                        && this.selectionNodes.hasOwnProperty(dataKey))
-                    {
-                        this.filledInputs[dataKey] = JSON.parse(this.selectionNodes[dataKey].inputNode.value);
+                if (this.isUpdate === "Y")
+                {
+                    for (const dataKey in this.filledInputs) {
+                        if (this.filledInputs.hasOwnProperty(dataKey)
+                            && this.selectionNodes.hasOwnProperty(dataKey))
+                        {
+                            this.filledInputs[dataKey] = JSON.parse(this.selectionNodes[dataKey].inputNode.value);
+                        }
                     }
+                    this.renderSpecialtiesList();
+                    this.renderEmployeesList();
+                    this.renderScheduleList();
                 }
-                this.renderSpecialtiesList();
-                this.renderEmployeesList();
-                this.renderScheduleList();
+                setTimeout(()=>{
+                    this.toggleLoader(false);
+                }, 300)
             }
-            setTimeout(()=>{
-                this.toggleLoader(false);
-            }, 300)
+            else
+            {
+                this.errorMessage("error on clinics rendering")
+            }
         }
-        else
-        {
-            this.errorMessage("error on clinics rendering")
+        catch (e) {
+            this.errorMessage(e);
         }
     },
 
@@ -332,6 +344,9 @@ window.appointmentWidget = {
             {
                 for (let uid in this.data.employees)
                 {
+                    if (!this.data.employees.hasOwnProperty(uid)){
+                        throw new Error("Employee uid not found on specialties render");
+                    }
                     const clinicCondition = (this.filledInputs[this.dataKeys.clinicsKey].clinicUid === this.data.employees[uid].clinicUid);
                     let canRender = true;
                     if(this.strictCheckingOfRelations){
@@ -383,6 +398,10 @@ window.appointmentWidget = {
             {
                 for (let uid in this.data.services)
                 {
+                    if (!this.data.services.hasOwnProperty(uid)){
+                        throw new Error("Employee uid not found on specialties render");
+                    }
+
                     let renderCondition = (this.filledInputs[this.dataKeys.specialtiesKey].specialtyUid
                         === this.data.services[uid].specialtyUid);
                     if (this.selectDoctorBeforeService){
@@ -535,7 +554,7 @@ window.appointmentWidget = {
                         }
 
                         let renderDate;
-                        let renderColumn = false;
+                        let renderColumn: undefined | HTMLElement = undefined;
                         intervals.forEach((day, index) => {
                             const isLast = (index === (intervals.length - 1));
                             if ((day.date !== renderDate) || isLast)
@@ -550,7 +569,9 @@ window.appointmentWidget = {
                             time.dataset.start = day.timeBegin;
                             time.dataset.end = day.timeEnd;
                             time.textContent = `${day['formattedTimeBegin']}`;
-                            renderColumn.append(time);
+                            if (renderColumn){
+                                renderColumn.append(time);
+                            }
                         });
                     }else{
                         const span = document.createElement('span');
@@ -945,14 +966,10 @@ window.appointmentWidget = {
 
     addPhoneMasks: function (){
         const maskedInputs = this.wrapper.querySelectorAll('input[type="tel"]');
-        if (maskedInputs.length)
-        {
-            maskedInputs.forEach((input) => {
-                input.addEventListener('input', (e) => {
-                    window.appointmentWidget.maskInput(e.currentTarget, '+7(000)000-00-00');
-                });
-            });
-        }
+        const that = this;
+        maskedInputs.length && maskedInputs.forEach((input) => {
+            input.addEventListener('input', (e) => that.maskInput(e.currentTarget, '+7(000)000-00-00'));
+        });
     },
 
     maskInput: function(input, mask){
@@ -1004,27 +1021,27 @@ window.appointmentWidget = {
 
         const date = new Date(timestampOrISO);
 
-        let day = date.getDate();
+        let day: string = `${date.getDate()}`;
         if (Number(day)<10) {
             day = `0${day}`;
         }
 
-        let month = date.getMonth()+1;
+        let month: string = `${date.getMonth()+1}`;
         if (Number(month)<10) {
             month = `0${month}`;
         }
 
-        let hours = date.getHours();
+        let hours: string = `${date.getHours()}`;
         if (Number(hours)<10) {
             hours = `0${hours}`;
         }
 
-        let minutes = date.getMinutes();
+        let minutes: string = `${date.getMinutes()}`;
         if (Number(minutes)<10) {
             minutes = `0${minutes}`;
         }
 
-        let seconds = date.getSeconds();
+        let seconds: string = `${date.getSeconds()}`;
         if (Number(seconds)<10) {
             seconds = `0${seconds}`;
         }

@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Service\OneCReader;
-use App\Service\TemplateParamsGenerator;
+use App\Service\TemplateService;
 use App\Utils\Utils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,9 +16,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class TemplateController extends AbstractController{
 
-    private TemplateParamsGenerator $paramsGenerator;
+    private TemplateService $paramsGenerator;
 
-    public function __construct(TemplateParamsGenerator $paramsGenerator)
+    public function __construct(TemplateService $paramsGenerator)
     {
         $this->paramsGenerator = $paramsGenerator;
     }
