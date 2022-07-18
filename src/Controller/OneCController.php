@@ -25,7 +25,7 @@ class OneCController extends AbstractController
     }
 
     /**
-     * @Route("/clinic/list", name="clinic.list", methods={"POST"})
+     * @Route("/clinic/list", name="clinic.list", methods={"POST", "GET"})
      */
     public function getClinicsList(): JsonResponse
     {

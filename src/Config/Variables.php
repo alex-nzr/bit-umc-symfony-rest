@@ -11,7 +11,7 @@ class Variables
     const ONE_C_CONNECT_DATA = [
         "PROTOCOL"                  => "http",
         "BASE_ADDR"                 => "localhost:3500",
-        "BASE_NAME"                 => "umc_corp",
+        "BASE_NAME"                 => "bit_stoma",
         "HTTP_SERVICE_PREFIX"       => "hs",
         "HTTP_SERVICE_NAME"         => "siteIntegration",
         "HTTP_SERVICE_API_VERSION"  => "V1",
